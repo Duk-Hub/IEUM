@@ -8,13 +8,13 @@ import java.util.List;
 public record ErrorResponse(
         String code,
         String message,
-        List<FieldError> fieldErrors
+        List<ValidationError> validationErrors
 ) {
     public static ErrorResponse of(String code, String message) {
         return new ErrorResponse(code, message, null);
     }
 
-    public static ErrorResponse of(String code, String message, List<FieldError> fieldErrors) {
-        return new ErrorResponse(code, message, fieldErrors);
+    public static ErrorResponse of(String code, String message, List<ValidationError> validationErrors) {
+        return new ErrorResponse(code, message, validationErrors);
     }
 }
