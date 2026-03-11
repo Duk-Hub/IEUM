@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: IEUM
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+  api-docs:
+    path: /api-docs
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+
+logging:
+  level:
+    root: info
