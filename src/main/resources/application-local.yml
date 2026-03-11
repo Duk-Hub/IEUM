@@ -3,6 +3,11 @@ spring:
     activate:
       on-profile: local
 
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
