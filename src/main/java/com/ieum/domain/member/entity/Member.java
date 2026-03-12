@@ -7,7 +7,6 @@ import com.ieum.domain.member.entity.enums.OAuthProvider;
 import com.ieum.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SoftDelete;
 
