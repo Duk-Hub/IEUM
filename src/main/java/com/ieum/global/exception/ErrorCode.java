@@ -18,7 +18,12 @@ public enum ErrorCode {
 
     // Auth
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
-    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다.");
+    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+
+    // SMS
+    SMS_SEND_TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "SMS 재발송은 1분 후에 가능합니다."),
+    SMS_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "인증번호가 만료되었습니다."),
+    SMS_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "인증번호가 일치하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
