@@ -17,6 +17,12 @@ jwt:
   access-token-ttl: 30m
   refresh-token-ttl: 14d
 
+app:
+  coolsms:
+    api-key: ${COOLSMS_API_KEY}
+    api-secret: ${COOLSMS_API_SECRET}
+    from: ${COOLSMS_FROM}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui
