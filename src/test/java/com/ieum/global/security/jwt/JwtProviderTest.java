@@ -23,13 +23,13 @@ class JwtProviderTest {
     private static final Duration ACCESS_TTL = Duration.ofMinutes(30);
     private static final Duration REFRESH_TTL = Duration.ofDays(14);
 
-    private JwtProvider activeJwtToken;
-    private JwtProvider expiredJwtToken;
+    private JwtProvider jwtProvider;
+    private JwtProvider expiredJwtProvider;
 
     @BeforeEach
     void setUp() {
-        activeJwtToken = createJwtProvider(ACCESS_TTL, REFRESH_TTL);
-        expiredJwtToken = createJwtProvider(Duration.ofMillis(-1), Duration.ofMillis(-1));
+        jwtProvider = createJwtProvider(ACCESS_TTL, REFRESH_TTL);
+        expiredJwtProvider = createJwtProvider(Duration.ofMillis(-1), Duration.ofMillis(-1));
     }
 
     private JwtProvider createJwtProvider(Duration accessTtl, Duration refreshTtl) {
@@ -46,27 +46,21 @@ class JwtProviderTest {
         @Test
         @DisplayName("생성된 AT에서 memberId를 정상 파싱한다")
         void success_memberIdMatches() {
-            // given
-            Long memberId = MEMBER_ID;
-
             // when
-            String token = activeJwtToken.generateAccessToken(memberId, ROLE);
+            String token = jwtProvider.generateAccessToken(MEMBER_ID, ROLE);
 
             // then
-            assertThat(activeJwtToken.getMemberId(token)).isEqualTo(memberId);
+            assertThat(jwtProvider.getMemberId(token)).isEqualTo(MEMBER_ID);
         }
 
         @Test
         @DisplayName("생성된 AT에서 role을 정상 파싱한다")
         void success_roleMatches() {
-            // given
-            MemberRole role = ROLE;
-
             // when
-            String token = activeJwtToken.generateAccessToken(MEMBER_ID, role);
+            String token = jwtProvider.generateAccessToken(MEMBER_ID, ROLE);
 
             // then
-            assertThat(activeJwtToken.getRole(token)).isEqualTo(role);
+            assertThat(jwtProvider.getRole(token)).isEqualTo(ROLE);
         }
     }
 
@@ -77,14 +71,11 @@ class JwtProviderTest {
         @Test
         @DisplayName("생성된 RT에서 memberId를 정상 파싱한다")
         void success_memberIdMatches() {
-            // given
-            Long memberId = MEMBER_ID;
-
             // when
-            String token = activeJwtToken.generateRefreshToken(memberId);
+            String token = jwtProvider.generateRefreshToken(MEMBER_ID);
 
             // then
-            assertThat(activeJwtToken.getMemberId(token)).isEqualTo(memberId);
+            assertThat(jwtProvider.getMemberId(token)).isEqualTo(MEMBER_ID);
         }
     }
 
@@ -96,20 +87,20 @@ class JwtProviderTest {
         @DisplayName("AT이면 예외 없이 통과한다")
         void success_noException() {
             // given
-            String token = activeJwtToken.generateAccessToken(MEMBER_ID, ROLE);
+            String token = jwtProvider.generateAccessToken(MEMBER_ID, ROLE);
 
             // when & then
-            activeJwtToken.validateAccessToken(token);
+            jwtProvider.validateAccessToken(token);
         }
 
         @Test
         @DisplayName("RT를 넘기면 TOKEN_INVALID 예외가 발생한다")
         void fail_refreshToken_throwsTokenInvalid() {
             // given
-            String refreshToken = activeJwtToken.generateRefreshToken(MEMBER_ID);
+            String refreshToken = jwtProvider.generateRefreshToken(MEMBER_ID);
 
             // when & then
-            assertThatThrownBy(() -> activeJwtToken.validateAccessToken(refreshToken))
+            assertThatThrownBy(() -> jwtProvider.validateAccessToken(refreshToken))
                     .isInstanceOf(CustomException.class)
                     .extracting(e -> ((CustomException) e).getErrorCode())
                     .isEqualTo(ErrorCode.TOKEN_INVALID);
@@ -124,20 +115,20 @@ class JwtProviderTest {
         @DisplayName("RT이면 예외 없이 통과한다")
         void success_noException() {
             // given
-            String token = activeJwtToken.generateRefreshToken(MEMBER_ID);
+            String token = jwtProvider.generateRefreshToken(MEMBER_ID);
 
             // when & then
-            activeJwtToken.validateRefreshToken(token);
+            jwtProvider.validateRefreshToken(token);
         }
 
         @Test
         @DisplayName("AT를 넘기면 TOKEN_INVALID 예외가 발생한다")
         void fail_accessToken_throwsTokenInvalid() {
             // given
-            String accessToken = activeJwtToken.generateAccessToken(MEMBER_ID, ROLE);
+            String accessToken = jwtProvider.generateAccessToken(MEMBER_ID, ROLE);
 
             // when & then
-            assertThatThrownBy(() -> activeJwtToken.validateRefreshToken(accessToken))
+            assertThatThrownBy(() -> jwtProvider.validateRefreshToken(accessToken))
                     .isInstanceOf(CustomException.class)
                     .extracting(e -> ((CustomException) e).getErrorCode())
                     .isEqualTo(ErrorCode.TOKEN_INVALID);
@@ -152,10 +143,10 @@ class JwtProviderTest {
         @DisplayName("생성 직후 AT의 TTL은 양수다")
         void success_freshToken_positive() {
             // given
-            String token = activeJwtToken.generateAccessToken(MEMBER_ID, ROLE);
+            String token = jwtProvider.generateAccessToken(MEMBER_ID, ROLE);
 
             // when
-            long remainTtl = activeJwtToken.getRemainTtl(token);
+            long remainTtl = jwtProvider.getRemainTtl(token);
 
             // then
             assertThat(remainTtl).isPositive();
@@ -170,10 +161,10 @@ class JwtProviderTest {
         @DisplayName("만료된 토큰이면 TOKEN_EXPIRED 예외가 발생한다")
         void fail_expiredToken_throwsTokenExpired() {
             // given
-            String expiredToken = expiredJwtToken.generateAccessToken(MEMBER_ID, ROLE);
+            String expiredToken = expiredJwtProvider.generateAccessToken(MEMBER_ID, ROLE);
 
             // when & then
-            assertThatThrownBy(() -> activeJwtToken.getMemberId(expiredToken))
+            assertThatThrownBy(() -> jwtProvider.getMemberId(expiredToken))
                     .isInstanceOf(CustomException.class)
                     .extracting(e -> ((CustomException) e).getErrorCode())
                     .isEqualTo(ErrorCode.TOKEN_EXPIRED);
@@ -186,7 +177,7 @@ class JwtProviderTest {
             String tamperedToken = "eyJhbGciOiJIUzI1NiJ9.invalid.payload";
 
             // when & then
-            assertThatThrownBy(() -> activeJwtToken.getMemberId(tamperedToken))
+            assertThatThrownBy(() -> jwtProvider.getMemberId(tamperedToken))
                     .isInstanceOf(CustomException.class)
                     .extracting(e -> ((CustomException) e).getErrorCode())
                     .isEqualTo(ErrorCode.TOKEN_INVALID);
