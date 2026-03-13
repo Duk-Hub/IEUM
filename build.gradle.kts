@@ -64,6 +64,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("com.redis:testcontainers-redis:2.2.2")
+    testImplementation("org.testcontainers:mysql")
 }
 
 tasks.withType<Test> {
