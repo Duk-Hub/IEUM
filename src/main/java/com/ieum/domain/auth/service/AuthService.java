@@ -8,10 +8,12 @@ import com.ieum.global.exception.ErrorCode;
 import com.ieum.infra.redis.RedisKeys;
 import com.ieum.infra.redis.RedisService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -42,5 +44,6 @@ public class AuthService {
         memberRepository.save(member);
 
         redisService.delete(RedisKeys.smsVerified(request.verifiedToken()));
+        log.info("회원가입 완료. memberId={}, username={}", member.getId(), request.username());
     }
 }
