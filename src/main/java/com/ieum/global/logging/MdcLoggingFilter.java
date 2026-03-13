@@ -65,7 +65,7 @@ public class MdcLoggingFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String uri = request.getRequestURI();
 
         return uri.startsWith("/favicon.ico") || uri.startsWith("/actuator");
