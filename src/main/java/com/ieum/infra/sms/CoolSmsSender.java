@@ -1,11 +1,16 @@
 package com.ieum.infra.sms;
 
+import com.ieum.global.exception.CustomException;
+import com.ieum.global.exception.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class CoolSmsSender implements SmsSender {
 
@@ -28,6 +33,11 @@ public class CoolSmsSender implements SmsSender {
         message.setTo(to);
         message.setText(content);
 
-        messageService.sendOne(new SingleMessageSendingRequest(message));
+        try {
+            messageService.sendOne(new SingleMessageSendingRequest(message));
+        } catch (Exception e) {
+            log.error("SMS 발송 실패. to={}", to, e);
+            throw new CustomException(ErrorCode.SMS_SEND_FAILED);
+        }
     }
 }

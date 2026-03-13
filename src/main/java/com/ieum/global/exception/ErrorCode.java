@@ -22,6 +22,7 @@ public enum ErrorCode {
 
     // SMS
     SMS_SEND_TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "SMS 재발송은 1분 후에 가능합니다."),
+    SMS_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "SMS 발송에 실패했습니다."),
     SMS_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "인증번호가 만료되었습니다."),
     SMS_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "인증번호가 일치하지 않습니다."),
     SMS_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "SMS 인증이 완료되지 않았습니다."),
