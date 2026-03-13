@@ -23,9 +23,9 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    private static final String CLAIM_ROLE   = "role";
-    private static final String CLAIM_TYPE   = "type";
-    private static final String TYPE_ACCESS  = "ACCESS";
+    private static final String CLAIM_ROLE = "role";
+    private static final String CLAIM_TYPE = "type";
+    private static final String TYPE_ACCESS = "ACCESS";
     private static final String TYPE_REFRESH = "REFRESH";
 
     private final JwtProperties jwtProperties;
