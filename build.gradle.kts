@@ -53,6 +53,9 @@ dependencies {
     //Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16")
 
+    //SMS
+    implementation("net.nurigo:sdk:4.3.0")
+
     //Util
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
