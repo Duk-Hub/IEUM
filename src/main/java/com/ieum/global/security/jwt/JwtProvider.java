@@ -46,7 +46,7 @@ public class JwtProvider {
         return buildToken(memberId, role, TYPE_ACCESS, jwtProperties.accessTokenTtl());
     }
 
-    public String generateRefreshToken(Long memberId, MemberRole role) {
+    public String generateRefreshToken(Long memberId) {
         return buildToken(memberId, null, TYPE_REFRESH, jwtProperties.refreshTokenTtl());
     }
 
